@@ -1,0 +1,913 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#17142b" />
+    <title>Очень важный вопрос 💌</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --ink: #fff9ff;
+        --muted: #c7bbd2;
+        --purple: #9d7bff;
+        --pink: #ff7fc7;
+        --gold: #ffd88a;
+        --panel: rgba(255, 255, 255, 0.1);
+        --panel-border: rgba(255, 255, 255, 0.18);
+        --shadow: 0 28px 80px rgba(6, 2, 22, 0.45);
+      }
+
+      * { box-sizing: border-box; }
+
+      html { min-height: 100%; background: #17142b; }
+
+      body {
+        min-height: 100vh;
+        margin: 0;
+        overflow-x: hidden;
+        color: var(--ink);
+        font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background:
+          radial-gradient(circle at 14% 10%, rgba(255, 127, 199, .28), transparent 27rem),
+          radial-gradient(circle at 88% 18%, rgba(157, 123, 255, .28), transparent 26rem),
+          linear-gradient(145deg, #17142b 0%, #29224c 50%, #211836 100%);
+      }
+
+      button, input, textarea { font: inherit; }
+      button { -webkit-tap-highlight-color: transparent; }
+
+      .background-orb {
+        position: fixed;
+        z-index: 0;
+        width: 18rem;
+        height: 18rem;
+        border-radius: 999px;
+        pointer-events: none;
+        filter: blur(5px);
+        opacity: .35;
+        background: linear-gradient(135deg, var(--pink), transparent 68%);
+        animation: float 11s ease-in-out infinite;
+      }
+
+      .orb-one { top: 14%; left: -10rem; }
+      .orb-two { right: -9rem; bottom: 4%; animation-delay: -4s; background: linear-gradient(135deg, var(--gold), transparent 68%); }
+
+      .shell {
+        position: relative;
+        z-index: 1;
+        width: min(100%, 900px);
+        min-height: 100vh;
+        margin: 0 auto;
+        padding: 22px 14px calc(26px + env(safe-area-inset-bottom));
+        display: flex;
+        flex-direction: column;
+      }
+
+      .topline {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        color: var(--muted);
+        font-size: .8rem;
+        letter-spacing: .12em;
+        text-transform: uppercase;
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--ink);
+        font-weight: 800;
+        letter-spacing: .06em;
+      }
+
+      .brand-heart { color: var(--pink); font-size: 1.05rem; }
+
+      .progress {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+      }
+
+      .progress span {
+        width: 23px;
+        height: 5px;
+        border-radius: 99px;
+        background: rgba(255, 255, 255, .18);
+        transition: background .35s ease, width .35s ease;
+      }
+
+      .progress span.active { width: 36px; background: linear-gradient(90deg, var(--pink), var(--purple)); }
+
+      main { flex: 1; display: grid; place-items: center; padding: 28px 0 20px; }
+
+      .screen { width: min(100%, 720px); animation: appear .55s ease both; }
+      .hidden { display: none !important; }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 17px;
+        padding: 8px 12px;
+        border: 1px solid rgba(255, 255, 255, .17);
+        border-radius: 999px;
+        color: #f7eefa;
+        background: rgba(255, 255, 255, .08);
+        font-size: .78rem;
+        font-weight: 700;
+      }
+
+      .card {
+        position: relative;
+        overflow: hidden;
+        padding: clamp(24px, 5vw, 44px) clamp(18px, 5.5vw, 52px);
+        border: 1px solid var(--panel-border);
+        border-radius: 30px;
+        background: linear-gradient(145deg, rgba(255,255,255,.15), rgba(255,255,255,.055));
+        box-shadow: var(--shadow), inset 0 1px rgba(255,255,255,.12);
+        backdrop-filter: blur(20px);
+      }
+
+      .card::before {
+        position: absolute;
+        width: 240px;
+        height: 240px;
+        top: -150px;
+        right: -75px;
+        border-radius: 50%;
+        content: "";
+        background: rgba(255, 127, 199, .22);
+        filter: blur(2px);
+      }
+
+      .kicker { margin: 0 0 11px; color: var(--gold); font-size: .92rem; font-weight: 800; }
+
+      h1, h2, p { position: relative; z-index: 1; }
+
+      h1, h2 {
+        margin: 0;
+        font-family: Georgia, "Times New Roman", serif;
+        font-weight: 600;
+        letter-spacing: -.02em;
+        line-height: 1.05;
+      }
+
+      h1 { max-width: 610px; font-size: clamp(2.25rem, 6.2vw, 4.1rem); }
+      h2 { font-size: clamp(1.85rem, 4.5vw, 2.8rem); }
+
+      .lead {
+        max-width: 510px;
+        margin: 14px 0 0;
+        color: var(--muted);
+        font-size: clamp(1rem, 2.6vw, 1.15rem);
+        line-height: 1.5;
+      }
+
+      .question-mark {
+        display: inline-block;
+        color: var(--pink);
+        font-size: .78em;
+        line-height: .78;
+        transform: translateY(-.04em);
+      }
+
+      .last-words { white-space: nowrap; }
+
+      .actions {
+        position: relative;
+        min-height: 92px;
+        margin-top: 25px;
+      }
+
+      .button {
+        position: relative;
+        border: 0;
+        border-radius: 17px;
+        cursor: pointer;
+        font-weight: 800;
+        transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+      }
+
+      .button:focus-visible, .choice:focus-visible, input:focus-visible, textarea:focus-visible {
+        outline: 3px solid rgba(255, 216, 138, .85);
+        outline-offset: 4px;
+      }
+
+      .button:active { transform: scale(.97); }
+
+      .yes-button {
+        position: absolute;
+        z-index: 2;
+        left: 0;
+        bottom: 4px;
+        min-width: 145px;
+        padding: 16px 24px;
+        color: #27132d;
+        background: linear-gradient(135deg, #ffd98d, #ff9fca);
+        box-shadow: 0 12px 25px rgba(255, 159, 202, .2);
+      }
+
+      .yes-button:hover { transform: translateY(-3px) rotate(-1deg); box-shadow: 0 17px 34px rgba(255, 159, 202, .3); }
+
+      .no-button {
+        position: absolute;
+        z-index: 1;
+        right: 0;
+        bottom: 0;
+        padding: 22px 42px;
+        color: #fff;
+        background: rgba(255, 255, 255, .12);
+        border: 1px solid rgba(255,255,255,.14);
+        will-change: left, top, transform;
+        transition:
+          left .62s cubic-bezier(.22, .78, .24, 1),
+          top .62s cubic-bezier(.22, .78, .24, 1),
+          transform .62s cubic-bezier(.22, .78, .24, 1),
+          background .2s ease;
+      }
+
+      .no-button.is-fleeing { position: fixed; z-index: 20; }
+
+      .hint { margin: 10px 0 0; color: rgba(255,255,255,.53); font-size: .82rem; }
+
+      .choice-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 22px;
+      }
+
+      .choice {
+        display: flex;
+        min-width: 0;
+        min-height: 118px;
+        padding: 16px;
+        flex-direction: column;
+        justify-content: space-between;
+        border: 1px solid rgba(255,255,255,.15);
+        border-radius: 18px;
+        color: var(--ink);
+        text-align: left;
+        background: rgba(255,255,255,.08);
+        cursor: pointer;
+        transition: transform .2s ease, border-color .2s ease, background .2s ease;
+      }
+
+      .choice:hover { transform: translateY(-4px); border-color: rgba(255, 216, 138, .6); background: rgba(255,255,255,.14); }
+      .choice.selected { border-color: var(--gold); background: linear-gradient(145deg, rgba(255,216,138,.19), rgba(255,127,199,.12)); box-shadow: 0 0 0 2px rgba(255,216,138,.12); }
+      .choice > span:last-child { display: block; min-width: 0; }
+      .choice-icon { display: block; font-size: 1.5rem; line-height: 1; }
+      .choice-title { display: block; margin-top: 10px; font-weight: 800; line-height: 1.15; overflow-wrap: anywhere; }
+      .choice-note { display: block; margin-top: 5px; color: var(--muted); font-size: .8rem; line-height: 1.35; overflow-wrap: anywhere; }
+
+      .continue {
+        width: 100%;
+        margin-top: 16px;
+        padding: 14px 20px;
+        color: #24132c;
+        background: linear-gradient(100deg, #ffd98d, #ff9fca);
+      }
+
+      .continue[disabled] { cursor: not-allowed; opacity: .4; filter: grayscale(.35); }
+
+      .back-button {
+        margin-top: 10px;
+        padding: 9px 0;
+        border: 0;
+        color: var(--muted);
+        background: transparent;
+        cursor: pointer;
+      }
+
+      .back-button:hover { color: var(--ink); }
+
+      .form-grid { display: grid; gap: 12px; margin-top: 20px; }
+
+      .custom-route { margin-top: 18px; }
+
+      .field-label { display: grid; gap: 6px; color: #f5e9f7; font-size: .86rem; font-weight: 700; }
+
+      .field-label span { color: var(--muted); font-size: .79rem; font-weight: 500; }
+
+      input, textarea {
+        width: 100%;
+        border: 1px solid rgba(255,255,255,.16);
+        border-radius: 14px;
+        padding: 11px 13px;
+        font-size: .92rem;
+        color: var(--ink);
+        outline: none;
+        background: rgba(16, 11, 36, .26);
+      }
+
+      textarea { min-height: 78px; resize: vertical; }
+      input::placeholder, textarea::placeholder { color: rgba(255,255,255,.37); }
+      input:focus, textarea:focus { border-color: var(--gold); background: rgba(16,11,36,.38); }
+
+      #detailsScreen .form-grid input,
+      #detailsScreen .form-grid textarea { min-height: 92px; height: 92px; }
+
+      #detailsScreen .form-grid .field-label > span { min-height: 2.7em; }
+
+      #detailsScreen .card { padding-top: 28px; padding-bottom: 24px; }
+      #detailsScreen .kicker { margin-bottom: 7px; }
+      #detailsScreen h2 { font-size: clamp(1.85rem, 4.2vw, 2.6rem); }
+      #detailsScreen .lead { margin-top: 10px; line-height: 1.35; }
+      #detailsScreen #detailsOptions { gap: 10px; margin-top: 16px; }
+      #detailsScreen #detailsOptions .choice { min-height: 104px; padding: 12px; border-radius: 16px; }
+      #detailsScreen #detailsOptions .choice-icon { font-size: 1.3rem; }
+      #detailsScreen #detailsOptions .choice-title { margin-top: 7px; font-size: .95rem; }
+      #detailsScreen #detailsOptions .choice-note { margin-top: 3px; font-size: .72rem; line-height: 1.25; }
+      #detailsScreen .form-grid { gap: 10px; margin-top: 16px; }
+      #detailsScreen .form-grid .field-label > span { min-height: 2.35em; line-height: 1.25; }
+      #detailsScreen .form-grid input,
+      #detailsScreen .form-grid textarea { min-height: 64px; height: 64px; }
+      #detailsScreen .summary { gap: 5px; margin-top: 12px; padding: 10px 12px; }
+      #detailsScreen .continue { margin-top: 10px; padding-top: 12px; padding-bottom: 12px; }
+      #detailsScreen .back-button { margin-top: 5px; padding-top: 5px; padding-bottom: 5px; }
+
+      .summary {
+        display: grid;
+        gap: 7px;
+        margin-top: 16px;
+        padding: 12px 14px;
+        border: 1px solid rgba(255,255,255,.13);
+        border-radius: 17px;
+        color: var(--muted);
+        background: rgba(0,0,0,.12);
+      }
+
+      .summary strong { color: var(--ink); }
+
+      .final-card { text-align: center; }
+      .success-heart { display: block; margin-bottom: 20px; font-size: 3.4rem; animation: heartbeat 1.7s ease-in-out infinite; }
+      .final-card .lead { margin-right: auto; margin-left: auto; }
+      .copy-button { width: 100%; margin-top: 22px; padding: 16px 20px; color: #28152e; background: linear-gradient(100deg, #ffd98d, #ff9fca); }
+      .status { min-height: 21px; margin-top: 13px; color: var(--muted); font-size: .84rem; line-height: 1.45; }
+
+      .footer { padding-top: 14px; color: rgba(255,255,255,.45); text-align: center; font-size: .75rem; }
+
+      .admin-header { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; }
+      .admin-header .lead { margin-top: 12px; }
+      .admin-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+      .admin-action { padding: 11px 14px; color: var(--ink); background: rgba(255,255,255,.11); }
+      .admin-action.danger { color: #ffd0df; }
+      .stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 11px; margin-top: 26px; }
+      .stat { padding: 15px; border: 1px solid rgba(255,255,255,.13); border-radius: 17px; background: rgba(0,0,0,.12); }
+      .stat-value { display: block; margin-bottom: 4px; color: var(--gold); font-size: 1.7rem; font-weight: 800; }
+      .stat-label { color: var(--muted); font-size: .78rem; }
+      .responses { display: grid; gap: 12px; margin-top: 13px; }
+      .response { padding: 17px; border: 1px solid rgba(255,255,255,.13); border-radius: 19px; background: rgba(255,255,255,.065); }
+      .response-top { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+      .response-title { font-weight: 800; }
+      .response-time { color: var(--muted); font-size: .75rem; text-align: right; }
+      .response-details { display: grid; gap: 5px; margin-top: 11px; color: var(--muted); font-size: .9rem; line-height: 1.4; }
+      .response-details strong { color: var(--ink); }
+      .empty { padding: 26px 10px; color: var(--muted); text-align: center; }
+
+      @keyframes appear { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+      @keyframes float { 0%, 100% { transform: translate(0,0); } 50% { transform: translate(28px, -26px); } }
+      @keyframes heartbeat { 0%, 100% { transform: scale(1); } 14% { transform: scale(1.12); } 28% { transform: scale(1); } }
+
+      @media (min-width: 600px) {
+        .shell { padding-right: 30px; padding-left: 30px; }
+        .card { border-radius: 30px; }
+        .choice-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+        #detailsOptions { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        #detailsScreen .form-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .choice { min-height: 136px; padding: 15px; }
+      }
+
+      @media (max-width: 420px) {
+        .topline { font-size: .68rem; }
+        .progress span { width: 16px; }
+        .progress span.active { width: 25px; }
+        h1 { font-size: clamp(2rem, 10vw, 2.6rem); }
+        .lead { font-size: .96rem; line-height: 1.42; }
+        .choice-grid { gap: 8px; }
+        .card { padding: 22px 16px; }
+        .choice { min-height: 108px; padding: 13px; }
+        .choice-title { font-size: .9rem; }
+        .choice-note { font-size: .72rem; }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="background-orb orb-one"></div>
+    <div class="background-orb orb-two"></div>
+
+    <div class="shell">
+      <header class="topline">
+        <div class="brand"><span class="brand-heart">♥</span> очень важный вопрос</div>
+        <div class="progress" aria-label="Прогресс"><span class="active"></span><span></span><span></span></div>
+      </header>
+
+      <main>
+        <section id="inviteScreen" class="screen">
+          <div class="eyebrow">✦ мини-миссия на вечер</div>
+          <div class="card">
+            <p class="kicker">У меня к тебе один важный вопрос</p>
+            <h1>Проведём вечер <span class="last-words">вместе<span class="question-mark">?</span></span></h1>
+            <p class="lead">Обещаю хорошее настроение, что-нибудь вкусное и один очень приятный день, который мы потом будем вспоминать.</p>
+            <div id="answerActions" class="actions" aria-label="Ответ на приглашение">
+              <button id="yesButton" class="button yes-button" type="button">Да, конечно ✨</button>
+              <button id="noButton" class="button no-button" type="button">Нет</button>
+            </div>
+            <p class="hint">Подсказка: кнопка «Нет» немного стесняется.</p>
+          </div>
+        </section>
+
+        <section id="typeScreen" class="screen hidden">
+          <div class="eyebrow">✦ шаг 2 из 3</div>
+          <div class="card">
+            <p class="kicker">Отлично, тогда выбираем настроение</p>
+            <h2>Как проведём наш вечер?</h2>
+            <p class="lead">Можно выбрать один либо несколько вариантов. Я за любой план, где есть ты.</p>
+            <div id="choiceGrid" class="choice-grid" aria-label="Варианты свидания" aria-multiselectable="true">
+              <button class="choice" type="button" data-choice="Кино" data-icon="🎬">
+                <span class="choice-icon">🎬</span><span><span class="choice-title">Кино</span><span class="choice-note">плед, попкорн и большой экран</span></span>
+              </button>
+              <button class="choice" type="button" data-choice="Кафе" data-icon="☕">
+                <span class="choice-icon">☕</span><span><span class="choice-title">Кафе</span><span class="choice-note">что-нибудь вкусное и много разговоров</span></span>
+              </button>
+              <button class="choice" type="button" data-choice="Прогулка" data-icon="🌙">
+                <span class="choice-icon">🌙</span><span><span class="choice-title">Прогулка</span><span class="choice-note">город, воздух и маршрут без спешки</span></span>
+              </button>
+              <button class="choice" type="button" data-choice="Выбери сама" data-icon="✨">
+                <span class="choice-icon">✨</span><span><span class="choice-title">Выбери сама</span><span class="choice-note">я доверяю твоему настроению</span></span>
+              </button>
+            </div>
+            <button id="toDetailsButton" class="button continue" type="button" disabled>Продолжить с выбранными вариантами →</button>
+            <button id="backToInviteButton" class="back-button" type="button">← Вернуться к вопросу</button>
+          </div>
+        </section>
+
+        <section id="detailsScreen" class="screen hidden">
+          <div class="eyebrow">✦ шаг 3 из 3</div>
+          <div class="card">
+            <p class="kicker">Последняя маленькая деталь</p>
+            <h2 id="detailsTitle">Идеальный вечер почти готов</h2>
+            <p id="detailsLead" class="lead">Оставь пару подсказок, чтобы я всё красиво собрал.</p>
+            <div id="detailsOptions" class="choice-grid"></div>
+            <div id="customRouteField" class="custom-route hidden">
+              <label class="field-label">Куда хочешь сходить?
+                <span>Напиши своё место или маршрут.</span>
+                <input id="customRouteInput" type="text" placeholder="например, в парк или на набережную" autocomplete="off" />
+              </label>
+            </div>
+            <div class="form-grid">
+              <label class="field-label">Когда тебе удобнее?
+                <span>Можно выбрать примерно — точную дату решим вместе.</span>
+                <input id="timeInput" type="text" placeholder="например, в субботу после 18:00" autocomplete="off" />
+              </label>
+              <label class="field-label">Что-нибудь ещё?
+                <span>Любая мысль, пожелание или секретный намёк.</span>
+                <textarea id="noteInput" placeholder="Напиши, если хочется…"></textarea>
+              </label>
+            </div>
+            <div id="selectionSummary" class="summary"></div>
+            <button id="submitButton" class="button continue" type="button">Отправить ответ 💌</button>
+            <button id="backToTypeButton" class="back-button" type="button">← Выбрать другой формат</button>
+          </div>
+        </section>
+
+        <section id="doneScreen" class="screen hidden">
+          <div class="card final-card">
+            <span class="success-heart">💌</span>
+            <p class="kicker">Ответ записан</p>
+            <h2>Ура, у нас свидание!</h2>
+            <p id="doneLead" class="lead">Я уже начинаю улыбаться. Осталось только выбрать день.</p>
+            <div id="doneSummary" class="summary"></div>
+            <button id="copyButton" class="button copy-button" type="button">Скопировать ответ</button>
+            <p id="doneStatus" class="status"></p>
+          </div>
+        </section>
+
+        <section id="adminScreen" class="screen hidden">
+          <div class="card">
+            <div class="admin-header">
+              <div>
+                <div class="eyebrow">✦ закрытая зона</div>
+                <h2>Ответы на приглашение</h2>
+                <p class="lead">Здесь появятся ответы, если сайт запущен через `server.js`.</p>
+              </div>
+            </div>
+            <div class="admin-actions">
+              <button id="refreshButton" class="button admin-action" type="button">Обновить</button>
+              <button id="exportButton" class="button admin-action" type="button">Скачать JSON</button>
+              <button id="clearButton" class="button admin-action danger" type="button">Очистить</button>
+            </div>
+            <div class="stats">
+              <div class="stat"><span id="totalStat" class="stat-value">—</span><span class="stat-label">всего ответов</span></div>
+              <div class="stat"><span id="yesStat" class="stat-value">—</span><span class="stat-label">согласились</span></div>
+              <div class="stat"><span id="lastStat" class="stat-value">—</span><span class="stat-label">последний ответ</span></div>
+            </div>
+            <div id="responsesList" class="responses"><div class="empty">Загружаю ответы…</div></div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer">сделано с надеждой на «да» ✦</footer>
+    </div>
+
+    <script>
+      (() => {
+        const STORAGE_KEY = 'date-invitation-responses-v1';
+        // После публикации Google Apps Script вставь его URL сюда.
+        const APPS_SCRIPT_URL = '';
+        const params = new URLSearchParams(location.search);
+        const adminMode = params.has('admin');
+        const adminKey = params.get('admin') || '';
+        const screens = {
+          invite: document.querySelector('#inviteScreen'),
+          type: document.querySelector('#typeScreen'),
+          details: document.querySelector('#detailsScreen'),
+          done: document.querySelector('#doneScreen'),
+          admin: document.querySelector('#adminScreen')
+        };
+        const progress = [...document.querySelectorAll('.progress span')];
+        const noButton = document.querySelector('#noButton');
+        const yesButton = document.querySelector('#yesButton');
+        const actions = document.querySelector('#answerActions');
+        const toDetailsButton = document.querySelector('#toDetailsButton');
+        const choiceButtons = [...document.querySelectorAll('[data-choice]')];
+        const detailsOptions = document.querySelector('#detailsOptions');
+        const selectionSummary = document.querySelector('#selectionSummary');
+        const submitButton = document.querySelector('#submitButton');
+        const timeInput = document.querySelector('#timeInput');
+        const noteInput = document.querySelector('#noteInput');
+        let selectedChoices = [];
+        let selectedDetail = '';
+        let lastResponse = null;
+        let noButtonEscaped = false;
+
+        const detailOptions = {
+          'Кино': {
+            title: 'Что смотрим?',
+            lead: 'Можно выбрать направление, а конкретный фильм найдём вместе.',
+            options: [
+              ['Выбираешь ты', 'Мне нравится доверять твоему вкусу.'],
+              ['Выбираю я', 'У меня уже есть один вариант в голове.'],
+              ['Решим вместе', 'Сначала афиша, потом попкорн.']
+            ]
+          },
+          'Кафе': {
+            title: 'Какой у нас план?',
+            lead: 'Главное — уютно. Остальное можно решить прямо по дороге.',
+            options: [
+              ['Кофе и десерт', 'Маленькая посиделка с большим тирамису.'],
+              ['Ужин', 'Красиво посидеть и никуда не торопиться.'],
+              ['Выберем на месте', 'Пойдём туда, где будет особенно уютно.']
+            ]
+          },
+          'Прогулка': {
+            title: 'Куда отправимся?',
+            lead: 'Выбери настроение маршрута — точку старта придумаем вместе.',
+            options: [
+              ['Немига — Верхний город — набережная', 'Огни, улочки и разговоры обо всём.'],
+              ['Минское море', 'Немного воздуха, воды и спокойствия.'],
+              ['Выбери сама', 'Напиши, куда хочешь сходить.']
+            ]
+          },
+        };
+
+        function showScreen(name) {
+          Object.values(screens).forEach((screen) => screen.classList.add('hidden'));
+          screens[name].classList.remove('hidden');
+          if (name === 'invite') resetNoButton();
+          else noButton.style.display = 'none';
+          progress.forEach((item, index) => item.classList.toggle('active', index <= ({ invite: 0, type: 1, details: 2, done: 2 }[name] ?? 2)));
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function escapeHtml(value) {
+          return String(value ?? '').replace(/[&<>'"]/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#039;', '"': '&quot;' }[char]));
+        }
+
+        function moveNoButtonToRandomPlace() {
+          const buttonWidth = noButton.offsetWidth;
+          const buttonHeight = noButton.offsetHeight;
+          const viewportWidth = window.innerWidth;
+          const viewportHeight = window.innerHeight;
+          const horizontalMargin = Math.max(16, Math.round(viewportWidth * .035));
+          const topMargin = Math.max(74, Math.round(viewportHeight * .1));
+          const bottomMargin = 24;
+          const maxX = Math.max(horizontalMargin, viewportWidth - buttonWidth - horizontalMargin);
+          const maxY = Math.max(topMargin, viewportHeight - buttonHeight - bottomMargin);
+          const x = horizontalMargin + Math.random() * Math.max(0, maxX - horizontalMargin);
+          const y = topMargin + Math.random() * Math.max(0, maxY - topMargin);
+          noButton.style.left = `${Math.round(x)}px`;
+          noButton.style.top = `${Math.round(y)}px`;
+          noButton.style.transform = `rotate(${Math.round(Math.random() * 10 - 5)}deg)`;
+        }
+
+        function resetNoButton() {
+          if (noButton.parentElement !== actions) actions.appendChild(noButton);
+          noButton.classList.remove('is-fleeing');
+          noButton.style.display = '';
+          noButton.style.left = '';
+          noButton.style.top = '';
+          noButton.style.right = '';
+          noButton.style.bottom = '';
+          noButton.style.transform = '';
+          noButton.setAttribute('aria-label', 'Нет');
+          noButtonEscaped = false;
+        }
+
+        function moveNoButton(event) {
+          if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          noButton.setAttribute('aria-label', 'Эта кнопка всё ещё убегает');
+          if (!noButtonEscaped) {
+            noButtonEscaped = true;
+            const currentPosition = noButton.getBoundingClientRect();
+            document.body.appendChild(noButton);
+            noButton.classList.add('is-fleeing');
+            noButton.style.right = 'auto';
+            noButton.style.bottom = 'auto';
+            noButton.style.left = `${Math.round(currentPosition.left)}px`;
+            noButton.style.top = `${Math.round(currentPosition.top)}px`;
+            requestAnimationFrame(() => requestAnimationFrame(moveNoButtonToRandomPlace));
+            return;
+          }
+          moveNoButtonToRandomPlace();
+        }
+
+        function chooseMainChoice(button) {
+          const choice = { name: button.dataset.choice, icon: button.dataset.icon };
+          const selectedIndex = selectedChoices.findIndex((item) => item.name === choice.name);
+          if (selectedIndex === -1) selectedChoices.push(choice);
+          else selectedChoices.splice(selectedIndex, 1);
+
+          const isSelected = selectedChoices.some((item) => item.name === choice.name);
+          button.classList.toggle('selected', isSelected);
+          button.setAttribute('aria-pressed', String(isSelected));
+          toDetailsButton.disabled = selectedChoices.length === 0;
+          if (selectedChoices.length === 0) {
+            toDetailsButton.textContent = 'Продолжить с выбранными вариантами →';
+          } else if (selectedChoices.length === 1) {
+            toDetailsButton.textContent = `Продолжить с «${selectedChoices[0].name}» →`;
+          } else {
+            toDetailsButton.textContent = `Продолжить с ${selectedChoices.length} вариантами →`;
+          }
+        }
+
+        function renderDetails() {
+          const chooseYourself = selectedChoices.length === 1 && selectedChoices[0].name === 'Выбери сама';
+          if (chooseYourself) {
+            document.querySelector('#detailsTitle').textContent = 'Тогда заполняем последние детали';
+            document.querySelector('#detailsLead').textContent = 'Напиши, когда тебе удобно, а остальное решим вместе.';
+            detailsOptions.innerHTML = '';
+            detailsOptions.classList.add('hidden');
+            document.querySelector('#customRouteField').classList.add('hidden');
+            document.querySelector('#customRouteInput').value = '';
+            selectedDetail = 'выберешь сама';
+            updateSummary();
+            return;
+          }
+
+          detailsOptions.classList.remove('hidden');
+          document.querySelector('#customRouteField').classList.add('hidden');
+          document.querySelector('#customRouteInput').value = '';
+          const config = selectedChoices.length === 1 ? detailOptions[selectedChoices[0].name] : {
+            title: 'Соберём свой вариант',
+            lead: 'Можно смешать несколько идей или выбрать детали уже на месте.',
+            options: [
+              ['Сделаем микс', 'Например, прогулка, потом кафе или кино.'],
+              ['Решим на месте', 'Оставим вечер открытым и выберем по настроению.'],
+              ['Доверяю тебе', 'Ты выберешь, как лучше объединить варианты.']
+            ]
+          };
+          const selectedIcons = selectedChoices.map((choice) => choice.icon).join(' ');
+          document.querySelector('#detailsTitle').textContent = config.title;
+          document.querySelector('#detailsLead').textContent = config.lead;
+          detailsOptions.innerHTML = config.options.map(([title, note], index) => `
+            <button class="choice ${index === 0 ? '' : ''}" type="button" data-detail="${escapeHtml(title)}">
+              <span class="choice-icon">${selectedIcons}</span>
+              <span><span class="choice-title">${escapeHtml(title)}</span><span class="choice-note">${escapeHtml(note)}</span></span>
+            </button>
+          `).join('');
+          selectedDetail = '';
+          detailsOptions.querySelectorAll('[data-detail]').forEach((button) => {
+            button.addEventListener('click', () => {
+              detailsOptions.querySelectorAll('[data-detail]').forEach((item) => item.classList.remove('selected'));
+              button.classList.add('selected');
+              selectedDetail = button.dataset.detail;
+              const isCustomRoute = selectedDetail === 'Выбери сама' && selectedChoices.some((choice) => choice.name === 'Прогулка');
+              document.querySelector('#customRouteField').classList.toggle('hidden', !isCustomRoute);
+              if (!isCustomRoute) document.querySelector('#customRouteInput').value = '';
+              updateSummary();
+            });
+          });
+          updateSummary();
+        }
+
+        function updateSummary() {
+          const selectedIcons = selectedChoices.map((choice) => choice.icon).join(' ') || '✨';
+          const selectedNames = selectedChoices.map((choice) => choice.name).join(' + ') || 'вариант пока не выбран';
+          const customRoute = document.querySelector('#customRouteInput')?.value.trim();
+          const detailText = selectedDetail === 'Выбери сама' && customRoute ? `Выбери сама: ${customRoute}` : selectedDetail || 'выберем вместе';
+          selectionSummary.innerHTML = `<div>${selectedIcons} <strong>${escapeHtml(selectedNames)}</strong></div><div>деталь: <strong>${escapeHtml(detailText)}</strong></div>`;
+        }
+
+        function readLocalResponses() {
+          try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch { return []; }
+        }
+
+        function saveLocalResponse(response) {
+          const responses = readLocalResponses();
+          responses.push(response);
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(responses));
+        }
+
+        function buildResponse() {
+          const customRoute = document.querySelector('#customRouteInput')?.value.trim();
+          const detail = selectedDetail === 'Выбери сама' && customRoute ? `Выбери сама: ${customRoute}` : selectedDetail || 'выберем вместе';
+          return {
+            id: `date-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+            answer: 'Да',
+            formats: selectedChoices.map((choice) => choice.name),
+            format: selectedChoices.map((choice) => choice.name).join(' + '),
+            formatIcon: selectedChoices.map((choice) => choice.icon).join(' ') || '✨',
+            detail,
+            when: timeInput.value.trim() || 'не указано',
+            note: noteInput.value.trim() || 'нет',
+            createdAt: new Date().toISOString()
+          };
+        }
+
+        async function submitResponse(response) {
+          saveLocalResponse(response);
+          let synced = false;
+          if (APPS_SCRIPT_URL) {
+            try {
+              await fetch(APPS_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify(response)
+              });
+              synced = true;
+            } catch { synced = false; }
+          } else if (location.protocol === 'http:' || location.protocol === 'https:') {
+            try {
+              const result = await fetch('/api/responses', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(response)
+              });
+              synced = result.ok;
+            } catch { synced = false; }
+          }
+          return synced;
+        }
+
+        function summaryHtml(response) {
+          return `<div>${escapeHtml(response.formatIcon)} <strong>${escapeHtml(response.format)}</strong> · ${escapeHtml(response.detail)}</div><div>когда: <strong>${escapeHtml(response.when)}</strong></div>${response.note !== 'нет' ? `<div>заметка: <strong>${escapeHtml(response.note)}</strong></div>` : ''}`;
+        }
+
+        function responseText(response) {
+          return `У меня есть ответ 💌\n${response.formatIcon} ${response.format} — ${response.detail}\nКогда: ${response.when}${response.note !== 'нет' ? `\nЗаметка: ${response.note}` : ''}`;
+        }
+
+        async function finish() {
+          submitButton.disabled = true;
+          submitButton.textContent = 'Сохраняю ответ…';
+          const response = buildResponse();
+          const synced = await submitResponse(response);
+          lastResponse = response;
+          document.querySelector('#doneSummary').innerHTML = summaryHtml(response);
+          document.querySelector('#doneStatus').textContent = synced
+            ? 'Ответ уже сохранён — я его увижу.'
+            : 'Ответ сохранён на этом устройстве. Нажми кнопку ниже и отправь мне текст, если сайт открыт просто файлом.';
+          submitButton.disabled = false;
+          submitButton.textContent = 'Отправить ответ 💌';
+          showScreen('done');
+        }
+
+        function formatDate(dateString) {
+          const date = new Date(dateString);
+          if (Number.isNaN(date.getTime())) return 'без даты';
+          return date.toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+        }
+
+        function renderAdmin(responses, errorMessage = '') {
+          const total = responses.length;
+          const accepted = responses.filter((item) => item.answer === 'Да').length;
+          document.querySelector('#totalStat').textContent = total;
+          document.querySelector('#yesStat').textContent = accepted;
+          document.querySelector('#lastStat').textContent = total ? formatDate(responses[total - 1].createdAt) : '—';
+          const list = document.querySelector('#responsesList');
+          if (errorMessage) {
+            list.innerHTML = `<div class="empty">${escapeHtml(errorMessage)}</div>`;
+            return;
+          }
+          if (!responses.length) {
+            list.innerHTML = '<div class="empty">Пока пусто. Но это ненадолго ✨</div>';
+            return;
+          }
+          list.innerHTML = [...responses].reverse().map((response) => `
+            <article class="response">
+              <div class="response-top"><span class="response-title">${escapeHtml(response.formatIcon)} ${escapeHtml(response.format || 'Ответ')}</span><span class="response-time">${escapeHtml(formatDate(response.createdAt))}</span></div>
+              <div class="response-details"><div>деталь: <strong>${escapeHtml(response.detail)}</strong></div><div>когда: <strong>${escapeHtml(response.when)}</strong></div>${response.note && response.note !== 'нет' ? `<div>заметка: <strong>${escapeHtml(response.note)}</strong></div>` : ''}</div>
+            </article>
+          `).join('');
+        }
+
+        async function loadAdminResponses() {
+          if (location.protocol === 'file:') {
+            renderAdmin(readLocalResponses());
+            return;
+          }
+          try {
+            const response = await fetch(`/api/responses?key=${encodeURIComponent(adminKey)}`);
+            if (!response.ok) throw new Error(response.status === 401 ? 'Неверный ключ доступа.' : 'Не удалось загрузить ответы.');
+            renderAdmin(await response.json());
+          } catch (error) {
+            renderAdmin([], error.message || 'Ошибка загрузки.');
+          }
+        }
+
+        async function exportResponses() {
+          let responses = readLocalResponses();
+          if (location.protocol !== 'file:') {
+            try {
+              const response = await fetch(`/api/responses?key=${encodeURIComponent(adminKey)}`);
+              if (response.ok) responses = await response.json();
+            } catch { /* local fallback */ }
+          }
+          const blob = new Blob([JSON.stringify(responses, null, 2)], { type: 'application/json' });
+          const url = URL.createObjectURL(blob);
+          const anchor = document.createElement('a');
+          anchor.href = url;
+          anchor.download = `date-responses-${new Date().toISOString().slice(0, 10)}.json`;
+          anchor.click();
+          URL.revokeObjectURL(url);
+        }
+
+        async function clearResponses() {
+          if (!window.confirm('Точно удалить все сохранённые ответы?')) return;
+          if (location.protocol === 'file:') {
+            localStorage.removeItem(STORAGE_KEY);
+            renderAdmin([]);
+            return;
+          }
+          const response = await fetch(`/api/responses?key=${encodeURIComponent(adminKey)}`, { method: 'DELETE' });
+          if (response.ok) renderAdmin([]); else alert('Не удалось очистить ответы. Проверь ключ доступа.');
+        }
+
+        if (adminMode) {
+          showScreen('admin');
+          document.querySelector('#refreshButton').addEventListener('click', loadAdminResponses);
+          document.querySelector('#exportButton').addEventListener('click', exportResponses);
+          document.querySelector('#clearButton').addEventListener('click', clearResponses);
+          loadAdminResponses();
+          return;
+        }
+
+        noButton.addEventListener('pointerenter', moveNoButton);
+        noButton.addEventListener('pointerdown', moveNoButton);
+        noButton.addEventListener('touchstart', moveNoButton, { passive: false });
+        noButton.addEventListener('click', moveNoButton);
+        yesButton.addEventListener('click', () => {
+          selectedChoices = [];
+          selectedDetail = '';
+          choiceButtons.forEach((button) => {
+            button.classList.remove('selected');
+            button.setAttribute('aria-pressed', 'false');
+          });
+          toDetailsButton.disabled = true;
+          toDetailsButton.textContent = 'Продолжить с выбранными вариантами →';
+          showScreen('type');
+        });
+        choiceButtons.forEach((button) => button.addEventListener('click', () => chooseMainChoice(button)));
+        choiceButtons.forEach((button) => button.setAttribute('aria-pressed', 'false'));
+        toDetailsButton.addEventListener('click', () => { if (!selectedChoices.length) return; renderDetails(); showScreen('details'); });
+        document.querySelector('#backToInviteButton').addEventListener('click', () => showScreen('invite'));
+        document.querySelector('#backToTypeButton').addEventListener('click', () => showScreen('type'));
+        document.querySelector('#customRouteInput').addEventListener('input', updateSummary);
+        submitButton.addEventListener('click', finish);
+        document.querySelector('#copyButton').addEventListener('click', async () => {
+          if (!lastResponse) return;
+          const text = responseText(lastResponse);
+          try {
+            await navigator.clipboard.writeText(text);
+            document.querySelector('#doneStatus').textContent = 'Готово — текст скопирован в буфер обмена.';
+          } catch {
+            document.querySelector('#doneStatus').textContent = text;
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>

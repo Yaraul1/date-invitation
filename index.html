@@ -14,8 +14,10 @@
         --pink: #ff9eb1;
         --gold: #ffd19a;
         --panel: rgba(255, 255, 255, 0.12);
-        --panel-border: rgba(255, 255, 255, 0.28);
-        --shadow: 0 28px 80px rgba(18, 7, 24, 0.42);
+        --panel-border: rgba(255, 255, 255, 0.24);
+        --shadow: 0 28px 80px rgba(18, 7, 24, 0.34);
+        --body-font: -apple-system, BlinkMacSystemFont, "Avenir Next", "Segoe UI", sans-serif;
+        --display-font: "Avenir Next", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       }
 
       * { box-sizing: border-box; }
@@ -27,7 +29,7 @@
         margin: 0;
         overflow-x: hidden;
         color: var(--ink);
-        font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        font-family: var(--body-font);
         background: #1b1327 url("background-evening.png") center / cover fixed no-repeat;
       }
 
@@ -126,10 +128,10 @@
         padding: clamp(28px, 5vw, 48px) clamp(20px, 5.5vw, 52px);
         border: 1px solid var(--panel-border);
         border-radius: 30px;
-        background: linear-gradient(145deg, rgba(255, 255, 255, .18), rgba(255, 255, 255, .07));
+        background: linear-gradient(145deg, rgba(255, 255, 255, .13), rgba(255, 255, 255, .035));
         box-shadow: var(--shadow), inset 0 1px rgba(255,255,255,.12);
-        -webkit-backdrop-filter: blur(24px) saturate(115%);
-        backdrop-filter: blur(24px) saturate(115%);
+        -webkit-backdrop-filter: blur(30px) saturate(135%);
+        backdrop-filter: blur(30px) saturate(135%);
       }
 
       .card::before {
@@ -140,7 +142,7 @@
         right: -75px;
         border-radius: 50%;
         content: "";
-        background: rgba(255, 155, 173, .2);
+        background: rgba(255, 155, 173, .14);
         filter: blur(2px);
       }
 
@@ -151,10 +153,10 @@
 
       h1, h2 {
         margin: 0;
-        font-family: Georgia, "Times New Roman", serif;
-        font-weight: 600;
-        letter-spacing: -.02em;
-        line-height: 1.05;
+        font-family: var(--display-font);
+        font-weight: 750;
+        letter-spacing: -.055em;
+        line-height: .98;
       }
 
       h1 { max-width: 650px; font-size: clamp(2.7rem, 6.2vw, 4.35rem); }
@@ -166,7 +168,7 @@
         bottom: -4px;
         color: var(--pink);
         content: "♡";
-        font-family: Georgia, "Times New Roman", serif;
+        font-family: var(--display-font);
         font-size: .72em;
         font-weight: 400;
         transform: rotate(-10deg);

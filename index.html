@@ -394,6 +394,17 @@
         .choice { min-height: 136px; padding: 15px; }
       }
 
+      @media (max-width: 599px) {
+        body { background: #1b1327; }
+
+        body::before {
+          background:
+            linear-gradient(90deg, rgba(25, 12, 31, .24), rgba(29, 17, 43, .06) 45%, rgba(19, 10, 31, .28)),
+            linear-gradient(180deg, rgba(15, 10, 31, .22), transparent 38%, rgba(17, 9, 25, .24)),
+            url("background-evening-mobile.png") center / cover no-repeat;
+        }
+      }
+
       @media (max-width: 420px) {
         .topline { font-size: .68rem; }
         .progress span { width: 16px; }
